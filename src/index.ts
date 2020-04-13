@@ -35,7 +35,7 @@ app.use('/user', userRouter);
 app.use('/post', postRouter)
 app.use('/postComment', postCommentRouter);
 
-const PORT: string | 5000 = 5000 || process.env.PORT;
+const PORT: string | 5000 = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server http://localhost:${PORT} is running`);
