@@ -20,7 +20,7 @@ dotenv.config();
 //Connect to DB
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, () => {
   console.log('Connection to mongodb has been established');
-});
+}).catch((err) => console.log(err));
 
 //import routes
 import { authRouter } from './routes/auth';
