@@ -1,0 +1,9 @@
+{
+  "exec": "yarn run build && yarn run serve",
+  "ext": "ts json env",
+  "verbose": 1,
+  "watch": [
+    "package.json",
+    "src"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "sv-work-from-home-skeleton",
+  "version": "0.0.0",
+  "description": "skeleton",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --project .",
+    "build:conf": "n-copy --source ./src/conf --destination ./dist/conf \"**/*.json\"",
+    "build:local": "run-s clean tslint check:tests test:local build",
+    "build:prod": "run-s clean tslint tslint:ci check:tests test:prod build",
+    "build:watch": "tsc -w",
+    "check:tests": "run-s tsc:tests tslint:tests",
+    "copyEditorsSettings": "node scripts/copyEditorsSettings.js",
+    "clean": "n-clean coverage dist reports",
+    "cz": "git cz",
+    "postbuild": "run-s build:conf",
+    "postinstall": "yarn run copyEditorsSettings",
+    "prebuild": "n-clean dist",
+    "pretslint:ci": "mkdirp ./reports",
+    "serve": "node ./dist/index.js",
+    "serve:local": "cross-env NODE_ENV=local nodemon --verbose",
+    "start": "node ./dist/index.js",
+    "start:local": "run-s serve:local",
+    "test": "yarn run test:local",
+    "test:local": "yarn run test:prod --coverageReporters lcov --testResultsProcessor ''",
+    "test:prod": "cross-env NODE_ENV=qa jest --config ./jest.config.json",
+    "test:watch": "yarn run test:local --watch",
+    "tsc:tests": "tsc --project ./tests",
+    "tslint": "tslint -c ./tslint.json --project ./tsconfig.json",
+    "tslint:ci": "yarn run tslint -t json -o ./reports/tslint-results.json",
+    "tslint:tests": "tslint -c ./tslint.json --project ./tests/tsconfig.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@hapi/joi": "^15.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "mongoose": "^5.7.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "@types/node": "^12.12.14",
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^5.1.5",
+    "fs-extra": "^8.1.0",
+    "jest": "^24.1.0",
+    "jest-sonar-reporter": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mkdirp": "^0.5.1",
+    "nodemon": "^1.18.10",
+    "npm-build-tools": "^2.2.5",
+    "npm-run-all": "^4.1.5",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.13.0",
+    "typescript": "^3.3.3333"
+  },
+  "jestSonar": {
+    "reportPath": "reports",
+    "reportFile": "test-reporter.xml",
+    "indent": 4
+  }
+}
