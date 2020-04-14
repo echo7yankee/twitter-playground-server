@@ -59,7 +59,7 @@ class PostCommentController {
                 if (!postComment) {
                     return res.status(400).json({});
                 }
-                const updatedPostComment = Object.assign(Object.assign({}, postComment), { postReply: req.body.postReply });
+                const updatedPostComment = Object.assign({}, req.body);
                 await this.postCommentDao.update(id, updatedPostComment);
                 return res.status(200).json({ message: 'success' });
             }

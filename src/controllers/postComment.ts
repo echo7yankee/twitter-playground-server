@@ -91,8 +91,7 @@ export class PostCommentController {
       }
 
       const updatedPostComment = {
-        ...postComment,
-        postReply: req.body.postReply
+        ...req.body
       }
 
       await this.postCommentDao.update(id, updatedPostComment);
