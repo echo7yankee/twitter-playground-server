@@ -12,7 +12,7 @@ const PostCommentSchema = new Schema({
     postId: {
         type: String,
     },
-    postReply: {
+    postComment: {
         type: String
     },
     username: {
