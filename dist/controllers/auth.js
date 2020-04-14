@@ -36,7 +36,7 @@ class AuthController {
                 const tokenParams = { id: user._id };
                 const token = await jwt_1.createToken({ params: tokenParams });
                 res.header('authToken', token);
-                return res.status(200).json({ token });
+                return res.status(200).json({ token, profileImg: user.profileImg });
             }
             catch (error) {
                 console.log(error);
@@ -64,7 +64,7 @@ class AuthController {
                 const tokenParams = { id: user._id };
                 const token = await jwt_1.createToken({ params: tokenParams });
                 await res.header('authToken', token);
-                return res.status(200).json({ token });
+                return res.status(200).json({ token, profileImg: user.profileImg });
             }
             catch (error) {
                 console.log(error);
