@@ -37,7 +37,7 @@ const userSchema = new Schema({
         year: { type: String },
         privacy: {
             monthAndDay: { type: String },
-            year: { type: String }
+            privacyYear: { type: String }
         }
     },
     email: {

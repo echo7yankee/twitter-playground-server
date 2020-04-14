@@ -50,7 +50,7 @@ export class AuthController {
           year: 'Select year',
           privacy: {
             monthAndDay: 'You follow each other',
-            year: 'Only you'
+            privacyYear: 'Only you'
           },
         },
         confirmPassword: hashedConfirmPassword,
