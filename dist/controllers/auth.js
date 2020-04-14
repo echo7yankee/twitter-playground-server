@@ -20,7 +20,9 @@ class AuthController {
                 const { hashedPassword, hashedConfirmPassword } = await bcryptjs_1.encryptPassword(req.body.password, req.body.confirmPassword);
                 const newUser = Object.assign(Object.assign({}, req.body), { location: '', website: '', bio: '', profileImg: '', social: {
                         following: [],
+                        followingCount: 0,
                         followers: [],
+                        followersCount: 0,
                     }, age: {
                         day: 'Select day',
                         month: 'Select month',

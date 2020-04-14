@@ -3,7 +3,7 @@ export const filterFollowingUser = (id, user) => {
     ...user.toJSON(),
     social: {
       ...user.social,
-      following: user.social.following.filter((follow) => follow !== id)
+      following: user.social.following.filter((follow) => follow !== id),
     }
   }
 

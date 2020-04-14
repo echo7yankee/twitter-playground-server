@@ -41,7 +41,11 @@ export class UserController {
         bio: user.bio,
         website: user.website,
         age: user.age,
-        social: user.social
+        social: {
+          ...user.social,
+          followingCount: user.social.following.length,
+          followersCount: user.social.followers.length,
+        }
       }
 
       return res.status(200).json(userDetails);
@@ -75,9 +79,9 @@ export class UserController {
   public followUser = async (req: Request, res: Response) => {
     try {
 
-      const { userId, visitorId }: { userId: string, visitorId: string } = req.query;
+      const { ownerId, visitorId }: { ownerId: string, visitorId: string } = req.query;
 
-      const user = await this.userDao.findById(userId);
+      const user = await this.userDao.findById(ownerId);
       const visitorUser = await this.userDao.findById(visitorId);
       let newUser;
       let newVisitorUser
@@ -87,13 +91,13 @@ export class UserController {
       }
 
       const sameFollowingUser = getFollowingUser(visitorId, user)
-      const sameFollowerUser = getFollowerUser(userId, visitorUser)
+      const sameFollowerUser = getFollowerUser(ownerId, visitorUser)
 
       if (sameFollowingUser || sameFollowerUser) {
         newUser = filterFollowingUser(visitorId, user);
-        newVisitorUser = filterFollowerUser(userId, visitorUser);
+        newVisitorUser = filterFollowerUser(ownerId, visitorUser);
 
-        await this.userDao.update(userId, newUser);
+        await this.userDao.update(ownerId, newUser);
         await this.userDao.update(visitorId, newVisitorUser);
 
         return res.status(200).json({ message: 'Success' })
@@ -103,7 +107,7 @@ export class UserController {
         ...user,
         social: {
           ...user.social,
-          following: [...user.social.following, visitorId]
+          following: [...user.social.following, visitorId],
         },
       }
 
@@ -111,11 +115,11 @@ export class UserController {
         ...visitorUser,
         social: {
           ...visitorUser.social,
-          followers: [...user.social.followers, userId]
+          followers: [...visitorUser.social.followers, ownerId],
         }
       }
 
-      await this.userDao.update(userId, newUser);
+      await this.userDao.update(ownerId, newUser);
       await this.userDao.update(visitorId, newVisitorUser);
 
       return res.status(200).json({ message: 'Success' })

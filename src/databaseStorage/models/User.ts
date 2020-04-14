@@ -23,7 +23,9 @@ const userSchema = new Schema({
   },
   social: {
     following: { type: Array },
-    followers: { type: Array }
+    followingCount: { type: Number },
+    followers: { type: Array },
+    followersCount: { type: Number },
   },
   age: {
     day: { type: String },

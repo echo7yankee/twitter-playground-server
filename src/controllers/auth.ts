@@ -40,7 +40,9 @@ export class AuthController {
         profileImg: '',
         social: {
           following: [],
+          followingCount: 0,
           followers: [],
+          followersCount: 0,
         },
         age: {
           day: 'Select day',
