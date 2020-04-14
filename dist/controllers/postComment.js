@@ -29,7 +29,7 @@ class PostCommentController {
                 }
                 const user = await this.userDao.findById(userId);
                 const newPostComment = Object.assign(Object.assign({}, req.body), { userId,
-                    postId, username: `${user.fName} ${user.lName}`, profileImg: user.profileImg });
+                    postId, username: `${user.fName} ${user.lName}`, profileImg: user.profileImg, createdAt: new Date() });
                 const postComment = await this.postCommentDao.add(newPostComment);
                 return res.status(200).json(postComment);
             }
@@ -59,7 +59,7 @@ class PostCommentController {
                 if (!postComment) {
                     return res.status(400).json({});
                 }
-                const updatedPostComment = Object.assign({}, req.body);
+                const updatedPostComment = Object.assign(Object.assign({}, req.body), { createdAt: new Date() });
                 await this.postCommentDao.update(id, updatedPostComment);
                 return res.status(200).json({ message: 'success' });
             }

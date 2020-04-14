@@ -51,7 +51,8 @@ export class PostCommentController {
         userId,
         postId,
         username: `${user.fName} ${user.lName}`,
-        profileImg: user.profileImg
+        profileImg: user.profileImg,
+        createdAt: new Date(),
       }
 
       const postComment = await this.postCommentDao.add(newPostComment);
@@ -91,7 +92,8 @@ export class PostCommentController {
       }
 
       const updatedPostComment = {
-        ...req.body
+        ...req.body,
+        createdAt: new Date(),
       }
 
       await this.postCommentDao.update(id, updatedPostComment);
