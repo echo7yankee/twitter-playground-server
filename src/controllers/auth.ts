@@ -38,6 +38,10 @@ export class AuthController {
         website: '',
         bio: '',
         profileImg: '',
+        social: {
+          following: [],
+          followers: [],
+        },
         age: {
           day: 'Select day',
           month: 'Select month',

@@ -21,6 +21,10 @@ const userSchema = new Schema({
   bio: {
     type: String,
   },
+  social: {
+    following: { type: Array },
+    followers: { type: Array }
+  },
   age: {
     day: { type: String },
     month: { type: String },

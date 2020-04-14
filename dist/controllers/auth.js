@@ -18,7 +18,10 @@ class AuthController {
                     return res.status(400).json({ error: 'Email already exists' });
                 }
                 const { hashedPassword, hashedConfirmPassword } = await bcryptjs_1.encryptPassword(req.body.password, req.body.confirmPassword);
-                const newUser = Object.assign(Object.assign({}, req.body), { location: '', website: '', bio: '', profileImg: '', age: {
+                const newUser = Object.assign(Object.assign({}, req.body), { location: '', website: '', bio: '', profileImg: '', social: {
+                        following: [],
+                        followers: [],
+                    }, age: {
                         day: 'Select day',
                         month: 'Select month',
                         year: 'Select year',

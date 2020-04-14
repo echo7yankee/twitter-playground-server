@@ -1,0 +1,1 @@
+{"version":3,"file":"getFollowerUser.js","sourceRoot":"","sources":["../../src/utils/getFollowerUser.ts"],"names":[],"mappings":";;AAAa,QAAA,eAAe,GAAG,CAAC,EAAE,EAAE,IAAI,EAAE,EAAE;IAC1C,MAAM,QAAQ,GAAG,IAAI,CAAC,MAAM,CAAC,SAAS,CAAC,IAAI,CAAC,CAAC,IAAI,EAAE,EAAE;QACnD,OAAO,IAAI,KAAK,EAAE,CAAA;IACpB,CAAC,CAAC,CAAA;IAEF,OAAO,QAAQ,CAAC;AAClB,CAAC,CAAA"}

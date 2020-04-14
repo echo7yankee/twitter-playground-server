@@ -15,7 +15,7 @@ app.use(express_1.default.json());
 dotenv_1.default.config();
 mongoose_1.default.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, () => {
     console.log('Connection to mongodb has been established');
-});
+}).catch((err) => console.log(err));
 const auth_1 = require("./routes/auth");
 const user_1 = require("./routes/user");
 const post_1 = require("./routes/post");
@@ -25,7 +25,7 @@ app.use('/user', auth_1.authRouter);
 app.use('/user', user_1.userRouter);
 app.use('/post', post_1.postRouter);
 app.use('/postComment', postComment_1.postCommentRouter);
-const PORT = 5000 || process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server http://localhost:${PORT} is running`);
 });

@@ -13,4 +13,5 @@ const userController = new user_1.UserController(daos_1.userDao, daos_2.postDao,
 exports.userRouter.get('/userDetails/:id', userController.getUserDetails);
 exports.userRouter.put('/userDetails/:id', userController.editUserDetails);
 exports.userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);
+exports.userRouter.post('/userDetails/follow', userController.followUser);
 //# sourceMappingURL=user.js.map

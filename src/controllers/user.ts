@@ -6,6 +6,12 @@ import { Request, Response } from 'express';
 import { PostDao } from "../databaseStorage/PostDao";
 import { PostCommentDao } from "../databaseStorage/PostCommentsDao";
 
+//Utils
+import { getFollowingUser } from "../utils/getFollowingUser";
+import { getFollowerUser } from "../utils/getFollowerUser";
+import { filterFollowingUser } from "../utils/filterFollowingUser";
+import { filterFollowerUser } from "../utils/filterFollowerUser";
+
 export class UserController {
   private userDao: UserDao
   private postDao: PostDao
@@ -35,7 +41,7 @@ export class UserController {
         bio: user.bio,
         website: user.website,
         age: user.age,
-        privacy: user.privacy
+        social: user.social
       }
 
       return res.status(200).json(userDetails);
@@ -59,6 +65,60 @@ export class UserController {
 
       updatedUser = await this.userDao.update(id, newUser);
       return res.status(200).json(updatedUser);
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+
+  public followUser = async (req: Request, res: Response) => {
+    try {
+
+      const { userId, visitorId }: { userId: string, visitorId: string } = req.query;
+
+      const user = await this.userDao.findById(userId);
+      const visitorUser = await this.userDao.findById(visitorId);
+      let newUser;
+      let newVisitorUser
+
+      if (!user || !visitorUser) {
+        return res.status(400).json({ error: 'User not found' })
+      }
+
+      const sameFollowingUser = getFollowingUser(visitorId, user)
+      const sameFollowerUser = getFollowerUser(userId, visitorUser)
+
+      if (sameFollowingUser || sameFollowerUser) {
+        newUser = filterFollowingUser(visitorId, user);
+        newVisitorUser = filterFollowerUser(userId, visitorUser);
+
+        await this.userDao.update(userId, newUser);
+        await this.userDao.update(visitorId, newVisitorUser);
+
+        return res.status(200).json({ message: 'Success' })
+      }
+
+      newUser = {
+        ...user,
+        social: {
+          ...user.social,
+          following: [...user.social.following, visitorId]
+        },
+      }
+
+      newVisitorUser = {
+        ...visitorUser,
+        social: {
+          ...visitorUser.social,
+          followers: [...user.social.followers, userId]
+        }
+      }
+
+      await this.userDao.update(userId, newUser);
+      await this.userDao.update(visitorId, newVisitorUser);
+
+      return res.status(200).json({ message: 'Success' })
 
     } catch (error) {
       console.log(error);
