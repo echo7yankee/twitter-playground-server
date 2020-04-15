@@ -68,9 +68,11 @@ export class PostController {
     }
   }
 
-  public getAllPosts = async (_req: Request, res: Response) => {
+  public getAllPosts = async (req: Request, res: Response) => {
     try {
-      const posts = await this.postDao.find({});
+      const params = req.query;
+
+      const posts = await this.postDao.find(params);
       const postComments = await this.postCommentDao.find({})
 
       if (!postComments) {

@@ -40,9 +40,10 @@ class PostController {
                 res.status(500).json({ error: 'Something went wrong' });
             }
         };
-        this.getAllPosts = async (_req, res) => {
+        this.getAllPosts = async (req, res) => {
             try {
-                const posts = await this.postDao.find({});
+                const params = req.query;
+                const posts = await this.postDao.find(params);
                 const postComments = await this.postCommentDao.find({});
                 if (!postComments) {
                     return res.status(400).json({ error: 'Post Comment do not exist or user does not exist' });
