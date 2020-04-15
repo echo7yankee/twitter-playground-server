@@ -4,26 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const User_1 = require("./User");
 const Schema = mongoose_1.default.Schema;
 const postSchema = new Schema({
-    username: {
-        type: String,
-        required: true
-    },
-    profileImg: {
-        type: String,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    comment: {
-        type: String,
-        required: true
-    },
-    postComments: {
-        type: Array,
-    },
+    username: { type: String, required: true },
+    profileImg: { type: String, },
+    createdAt: { type: Date, default: Date.now },
+    comment: { type: String, required: true },
+    postComments: { type: Array, },
     poll: {
         whoVoted: { type: Array },
         pollLengthDays: { type: Number },
@@ -34,16 +22,9 @@ const postSchema = new Schema({
     whoLiked: {
         type: Array,
     },
-    likes: {
-        type: Number
-    },
-    userId: {
-        type: String,
-        required: true
-    },
-    userProfileImg: {
-        type: String,
-    }
+    likes: { type: Number },
+    userId: { type: String, required: true },
+    user: User_1.userSchema,
 });
 exports.Post = mongoose_1.default.model('post', postSchema);
 //# sourceMappingURL=Post.js.map

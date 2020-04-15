@@ -1,11 +1,11 @@
 import express from 'express';
 
 //daos
-import { postDao, postCommentDao } from '../databaseStorage/daos';
+import { postDao, postCommentDao, userDao } from '../databaseStorage/daos';
 
 export const postRouter = express.Router();
 import { PostController } from '../controllers/post';
-const postController = new PostController(postDao, postCommentDao);
+const postController = new PostController(postDao, postCommentDao, userDao);
 
 postRouter.post('/', postController.addPost);
 postRouter.get('/', postController.getPosts);

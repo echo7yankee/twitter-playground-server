@@ -82,9 +82,13 @@ export class UserController {
       const { ownerId, visitorId }: { ownerId: string, visitorId: string } = req.query;
 
       const user = await this.userDao.findById(ownerId);
+      const post = await this.postDao.findOne({ userId: ownerId });
       const visitorUser = await this.userDao.findById(visitorId);
+      const visitorPost = await this.postDao.findOne({ userId: visitorId });
       let newUser;
-      let newVisitorUser
+      let newVisitorUser;
+      let newPost;
+      let newVisitorPost;
 
       if (!user || !visitorUser) {
         return res.status(400).json({ error: 'User not found' })
@@ -97,8 +101,20 @@ export class UserController {
         newUser = filterFollowingUser(visitorId, user);
         newVisitorUser = filterFollowerUser(ownerId, visitorUser);
 
+        newPost = {
+          ...post.toJSON(),
+          user: newUser,
+        }
+
+        newVisitorPost = {
+          ...visitorPost.toJSON(),
+          user: newVisitorUser,
+        }
+
         await this.userDao.update(ownerId, newUser);
         await this.userDao.update(visitorId, newVisitorUser);
+        await this.postDao.update(post.id, newPost);
+        await this.postDao.update(visitorPost.id, newVisitorPost);
 
         return res.status(200).json({ message: 'Success' })
       }
@@ -119,8 +135,20 @@ export class UserController {
         }
       }
 
+      newPost = {
+        ...post.toJSON(),
+        user: newUser,
+      }
+
+      newVisitorPost = {
+        ...visitorPost.toJSON(),
+        user: newVisitorUser,
+      }
+
       await this.userDao.update(ownerId, newUser);
       await this.userDao.update(visitorId, newVisitorUser);
+      await this.postDao.update(post.id, newPost);
+      await this.postDao.update(visitorPost.id, newVisitorPost);
 
       return res.status(200).json({ message: 'Success' })
 

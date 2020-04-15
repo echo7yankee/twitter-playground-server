@@ -1,16 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class PostController {
-    constructor(postDao, postCommentDao) {
+    constructor(postDao, postCommentDao, userDao) {
         this.addPost = async (req, res) => {
             try {
                 const { userId, username, profileImg } = req.query;
+                const user = await this.userDao.findById(userId);
                 if (!userId) {
                     return res.status(400).json({ error: "Something went wrong" });
                 }
                 const newPost = Object.assign(Object.assign({}, req.body), { likes: 0, userId,
                     username,
-                    profileImg });
+                    profileImg,
+                    user });
                 const post = await this.postDao.add(newPost);
                 return res.status(200).json(post);
             }
@@ -157,6 +159,7 @@ class PostController {
         };
         this.postDao = postDao;
         this.postCommentDao = postCommentDao;
+        this.userDao = userDao;
     }
 }
 exports.PostController = PostController;

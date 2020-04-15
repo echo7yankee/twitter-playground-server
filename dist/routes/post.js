@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const daos_1 = require("../databaseStorage/daos");
 exports.postRouter = express_1.default.Router();
 const post_1 = require("../controllers/post");
-const postController = new post_1.PostController(daos_1.postDao, daos_1.postCommentDao);
+const postController = new post_1.PostController(daos_1.postDao, daos_1.postCommentDao, daos_1.userDao);
 exports.postRouter.post('/', postController.addPost);
 exports.postRouter.get('/', postController.getPosts);
 exports.postRouter.get('/all', postController.getAllPosts);

@@ -1,26 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 const Schema: Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-  fName: {
-    type: String,
-    required: true,
-    min: 2
-  },
-  lName: {
-    type: String,
-    required: true,
-    min: 2
-  },
-  location: {
-    type: String,
-  },
-  website: {
-    type: String,
-  },
-  bio: {
-    type: String,
-  },
+export const userSchema = new Schema({
+  fName: { type: String, required: true, min: 2 },
+  lName: { type: String, required: true, min: 2 },
+  location: { type: String, },
+  website: { type: String, },
+  bio: { type: String, },
   social: {
     following: { type: Array },
     followingCount: { type: Number },
@@ -36,28 +22,14 @@ const userSchema = new Schema({
       privacyYear: { type: String }
     }
   },
-  email: {
-    type: String,
-    required: true
-  },
+  email: { type: String, required: true },
   password: {
-    type: String,
-    required: true,
-    min: 2
+    type: String, required: true, min: 2
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-    min: 2
-  },
-  profileImg: {
-    type: String,
-  },
+  confirmPassword: { type: String, required: true, min: 2 },
+  profileImg: { type: String, },
   // profileImg: { type: String },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  createdAt: { type: Date, default: Date.now }
 });
 
 // tslint:disable-next-line: variable-name

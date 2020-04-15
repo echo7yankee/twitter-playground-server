@@ -2,13 +2,16 @@
 import { PostDao } from "../databaseStorage/PostDao";
 import { Request, Response } from 'express';
 import { PostCommentDao } from "../databaseStorage/PostCommentsDao";
+import { UserDao } from "../databaseStorage/UserDao";
 
 export class PostController {
   private postDao: PostDao
   private postCommentDao: PostCommentDao
-  constructor(postDao: PostDao, postCommentDao: PostCommentDao) {
+  private userDao: UserDao
+  constructor(postDao: PostDao, postCommentDao: PostCommentDao, userDao: UserDao) {
     this.postDao = postDao;
     this.postCommentDao = postCommentDao;
+    this.userDao = userDao;
   }
 
   public addPost = async (req: Request, res: Response) => {
@@ -16,6 +19,8 @@ export class PostController {
 
       const { userId, username, profileImg }
         : { userId: string, username: string, profileImg: string } = req.query;
+
+      const user = await this.userDao.findById(userId);
 
       if (!userId) {
         return res.status(400).json({ error: "Something went wrong" })
@@ -26,7 +31,8 @@ export class PostController {
         likes: 0,
         userId,
         username,
-        profileImg
+        profileImg,
+        user
       }
 
       const post = await this.postDao.add(newPost);
