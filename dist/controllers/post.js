@@ -6,13 +6,14 @@ class PostController {
             try {
                 const { userId, username, profileImg } = req.query;
                 const user = await this.userDao.findById(userId);
+                const processedUser = Object.assign(Object.assign({}, user.toJSON()), { id: user._id });
+                delete processedUser._id;
                 if (!userId) {
                     return res.status(400).json({ error: "Something went wrong" });
                 }
                 const newPost = Object.assign(Object.assign({}, req.body), { likes: 0, userId,
                     username,
-                    profileImg,
-                    user });
+                    profileImg, user: processedUser });
                 const post = await this.postDao.add(newPost);
                 return res.status(200).json(post);
             }
@@ -69,6 +70,22 @@ class PostController {
                     return Number(new Date(b.createdAt)) - Number(new Date(a.createdAt));
                 });
                 return res.status(200).json(processedPosts);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Something went wrong' });
+            }
+        };
+        this.getPost = async (req, res) => {
+            try {
+                const { postId } = req.params;
+                const post = await this.postDao.findById(postId);
+                if (!post) {
+                    return res.status(400).json({ error: 'Post does not exist' });
+                }
+                const processedPost = Object.assign(Object.assign({}, post.toJSON()), { id: post._id });
+                delete processedPost._id;
+                return res.status(200).json(processedPost);
             }
             catch (error) {
                 console.log(error);

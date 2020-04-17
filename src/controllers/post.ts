@@ -21,6 +21,12 @@ export class PostController {
         : { userId: string, username: string, profileImg: string } = req.query;
 
       const user = await this.userDao.findById(userId);
+      const processedUser = {
+        ...user.toJSON(),
+        id: user._id,
+      }
+
+      delete processedUser._id;
 
       if (!userId) {
         return res.status(400).json({ error: "Something went wrong" })
@@ -32,7 +38,7 @@ export class PostController {
         userId,
         username,
         profileImg,
-        user
+        user: processedUser
       }
 
       const post = await this.postDao.add(newPost);
@@ -112,6 +118,29 @@ export class PostController {
       })
 
       return res.status(200).json(processedPosts);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+
+  public getPost = async (req: Request, res: Response) => {
+    try {
+      const { postId } = req.params;
+      const post = await this.postDao.findById(postId);
+      if (!post) {
+        return res.status(400).json({ error: 'Post does not exist' })
+      }
+
+      const processedPost = {
+        ...post.toJSON(),
+        id: post._id,
+      }
+
+      delete processedPost._id;
+
+      return res.status(200).json(processedPost);
+
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'Something went wrong' });

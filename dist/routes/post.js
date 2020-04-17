@@ -11,6 +11,7 @@ const postController = new post_1.PostController(daos_1.postDao, daos_1.postComm
 exports.postRouter.post('/', postController.addPost);
 exports.postRouter.get('/', postController.getPosts);
 exports.postRouter.get('/all', postController.getAllPosts);
+exports.postRouter.get('/:postId', postController.getPost);
 exports.postRouter.delete('/:id', postController.removePost);
 exports.postRouter.put('/:id', postController.editPost);
 exports.postRouter.put('/:id/like', postController.likePost);
