@@ -24,6 +24,7 @@ const postSchema = new Schema({
     },
     likes: { type: Number },
     userId: { type: String, required: true },
+    uuid: { type: String },
     user: User_1.userSchema,
 });
 exports.Post = mongoose_1.default.model('post', postSchema);

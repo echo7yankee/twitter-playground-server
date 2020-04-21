@@ -67,8 +67,8 @@ export class PostCommentController {
   public removePostComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-
-      const removedPostComment = await this.postCommentDao.remove(id);
+      const post = await this.postCommentDao.findOne({ uuid: id });
+      const removedPostComment = await this.postCommentDao.remove(post._id);
 
       if (!removedPostComment) {
         return res.status(400).json({});
@@ -84,10 +84,9 @@ export class PostCommentController {
   public editPostComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
+      const comment = await this.postCommentDao.findOne({ uuid: id })
 
-      const postComment = await this.postCommentDao.findById(id);
-
-      if (!postComment) {
+      if (!comment) {
         return res.status(400).json({});
       }
 
@@ -96,7 +95,7 @@ export class PostCommentController {
         createdAt: new Date(),
       }
 
-      await this.postCommentDao.update(id, updatedPostComment);
+      await this.postCommentDao.update(comment._id, updatedPostComment);
 
       return res.status(200).json({ message: 'success' });
     } catch (error) {

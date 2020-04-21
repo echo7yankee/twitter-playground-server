@@ -5,6 +5,7 @@ const PostCommentSchema = new Schema({
   userId: {
     type: String,
   },
+  uuid: { type: String },
   postId: {
     type: String,
   },

@@ -150,8 +150,8 @@ export class PostController {
   public removePost = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-
-      const removedPost = await this.postDao.remove(id);
+      const post = await this.postDao.findOne({ uuid: id })
+      const removedPost = await this.postDao.remove(post._id);
 
       if (!removedPost) {
         return res.status(400).json({});
@@ -171,8 +171,8 @@ export class PostController {
       const updatedPost = {
         ...req.body
       }
-
-      const editedPost = await this.postDao.update(id, updatedPost);
+      const post = await this.postDao.findOne({ uuid: id })
+      const editedPost = await this.postDao.update(post._id, updatedPost);
 
       if (!editedPost) {
         return res.status(400).json({});
@@ -240,7 +240,7 @@ export class PostController {
   public votePoll = async (req: Request, res: Response) => {
     try {
       const { id }: { id: string } = req.params;
-      const post = await this.postDao.findById(id);
+      const post = await this.postDao.findOne({ uuid: id });
 
       let editedPost;
       let newPost;
@@ -260,7 +260,7 @@ export class PostController {
           }
         }
 
-        await this.postDao.update(id, newPost);
+        await this.postDao.update(post._id, newPost);
         return res.status(200).json({ message: 'Success' });
       }
 
@@ -272,7 +272,7 @@ export class PostController {
         }
       }
 
-      await this.postDao.update(id, editedPost);
+      await this.postDao.update(post._id, editedPost);
       return res.status(200).json({ message: 'Success' });
     } catch (error) {
       console.log(error);
