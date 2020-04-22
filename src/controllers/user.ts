@@ -79,7 +79,7 @@ export class UserController {
   public followUser = async (req: Request, res: Response) => {
 
     // TODO: FIX FOLLOW/UNFOLLOW MESSAGE ON EACH POST. IF THE USER HAS 
-    // 2 OR MORE POSTS AND YOU FOLLOW IT WILL ONLY UPDATE ON ONE, BECAUSE YOU'RE UPDATING ON ID,
+    // 2 OR MORE POSTS AND YOU FOLLOW IT WILL ONLY UPDATE ONE POST, BECAUSE YOU'RE UPDATING ON ID,
     // YOU HAVE TO UPDATE ALL OF THEM WITH UPDATEMANY
 
     try {
@@ -87,10 +87,8 @@ export class UserController {
 
       const user = await this.userDao.findById(ownerId);
       const visitorUser = await this.userDao.findById(visitorId);
-      const visitorPost = await this.postDao.findOne({ userId: visitorId });
       let newUser;
       let newVisitorUser;
-      let newVisitorPost;
 
       if (!user || !visitorUser) {
         return res.status(400).json({ error: 'User not found' })
@@ -103,20 +101,15 @@ export class UserController {
         newUser = filterFollowingUser(visitorId, user);
         newVisitorUser = filterFollowerUser(ownerId, visitorUser);
 
-        newVisitorPost = {
-          ...visitorPost,
-          user: newVisitorUser,
-        }
-
         await this.userDao.update(ownerId, newUser);
         await this.userDao.update(visitorId, newVisitorUser);
-        await this.postDao.update(visitorPost._id, newVisitorPost);
+        await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });
 
         return res.status(200).json({ message: 'Success' })
       }
 
       newUser = {
-        ...user,
+        ...user.toJSON(),
         social: {
           ...user.social,
           following: [...user.social.following, visitorId],
@@ -124,21 +117,16 @@ export class UserController {
       }
 
       newVisitorUser = {
-        ...visitorUser,
+        ...visitorUser.toJSON(),
         social: {
           ...visitorUser.social,
           followers: [...visitorUser.social.followers, ownerId],
         }
       }
 
-      newVisitorPost = {
-        ...visitorPost,
-        user: newVisitorUser,
-      }
-
       await this.userDao.update(ownerId, newUser);
       await this.userDao.update(visitorId, newVisitorUser);
-      await this.postDao.update(visitorPost._id, newVisitorPost);
+      await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });
 
       return res.status(200).json({ message: 'Success' })
 
@@ -172,7 +160,7 @@ export class UserController {
           profileImg: file.name
         }
 
-        await this.postDao.updateAll(id, newUser.profileImg);
+        await this.postDao.updateAll({ userId: id }, { profileImg: newUser.profileImg });
         await this.postCommentDao.updateAll(id, newUser.profileImg);
 
         updatedUser = await this.userDao.update(id, newUser);

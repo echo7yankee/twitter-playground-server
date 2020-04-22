@@ -2,11 +2,11 @@
 import { DAO } from './Dao';
 
 export class PostDao extends DAO {
-  public async updateAll(userId: string, profileImg: string) {
+  public async updateAll(filter: any, params: any) {
     try {
       const items = await this.client.model.updateMany(
-        { userId },
-        { $set: { profileImg } }, { multi: true }
+        filter,
+        { $set: params }, { multi: true }
       );
       return items;
     } catch (error) {

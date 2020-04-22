@@ -51,10 +51,8 @@ class UserController {
                 const { ownerId, visitorId } = req.query;
                 const user = await this.userDao.findById(ownerId);
                 const visitorUser = await this.userDao.findById(visitorId);
-                const visitorPost = await this.postDao.findOne({ userId: visitorId });
                 let newUser;
                 let newVisitorUser;
-                let newVisitorPost;
                 if (!user || !visitorUser) {
                     return res.status(400).json({ error: 'User not found' });
                 }
@@ -63,18 +61,16 @@ class UserController {
                 if (sameFollowingUser || sameFollowerUser) {
                     newUser = filterFollowingUser_1.filterFollowingUser(visitorId, user);
                     newVisitorUser = filterFollowerUser_1.filterFollowerUser(ownerId, visitorUser);
-                    newVisitorPost = Object.assign(Object.assign({}, visitorPost), { user: newVisitorUser });
                     await this.userDao.update(ownerId, newUser);
                     await this.userDao.update(visitorId, newVisitorUser);
-                    await this.postDao.update(visitorPost._id, newVisitorPost);
+                    await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });
                     return res.status(200).json({ message: 'Success' });
                 }
-                newUser = Object.assign(Object.assign({}, user), { social: Object.assign(Object.assign({}, user.social), { following: [...user.social.following, visitorId] }) });
-                newVisitorUser = Object.assign(Object.assign({}, visitorUser), { social: Object.assign(Object.assign({}, visitorUser.social), { followers: [...visitorUser.social.followers, ownerId] }) });
-                newVisitorPost = Object.assign(Object.assign({}, visitorPost), { user: newVisitorUser });
+                newUser = Object.assign(Object.assign({}, user.toJSON()), { social: Object.assign(Object.assign({}, user.social), { following: [...user.social.following, visitorId] }) });
+                newVisitorUser = Object.assign(Object.assign({}, visitorUser.toJSON()), { social: Object.assign(Object.assign({}, visitorUser.social), { followers: [...visitorUser.social.followers, ownerId] }) });
                 await this.userDao.update(ownerId, newUser);
                 await this.userDao.update(visitorId, newVisitorUser);
-                await this.postDao.update(visitorPost._id, newVisitorPost);
+                await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });
                 return res.status(200).json({ message: 'Success' });
             }
             catch (error) {
@@ -97,7 +93,7 @@ class UserController {
                         return res.status(500).send(err);
                     }
                     newUser = Object.assign(Object.assign({}, req.body), { profileImg: file.name });
-                    await this.postDao.updateAll(id, newUser.profileImg);
+                    await this.postDao.updateAll({ userId: id }, { profileImg: newUser.profileImg });
                     await this.postCommentDao.updateAll(id, newUser.profileImg);
                     updatedUser = await this.userDao.update(id, newUser);
                     return res.status(200).json(updatedUser);
