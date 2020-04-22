@@ -80,10 +80,16 @@ class PostController {
             try {
                 const { postId } = req.params;
                 const post = await this.postDao.findById(postId);
+                const postComments = await this.postCommentDao.find({ postId: post._id });
                 if (!post) {
                     return res.status(400).json({ error: 'Post does not exist' });
                 }
-                const processedPost = Object.assign(Object.assign({}, post.toJSON()), { id: post._id });
+                const processedPostComments = postComments.map((comment) => {
+                    let newComments = Object.assign(Object.assign({}, comment.toJSON()), { id: comment._id });
+                    delete newComments._id;
+                    return newComments;
+                });
+                const processedPost = Object.assign(Object.assign({}, post.toJSON()), { postComments: processedPostComments, id: post._id });
                 delete processedPost._id;
                 return res.status(200).json(processedPost);
             }
