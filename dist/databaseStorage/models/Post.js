@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const User_1 = require("./User");
 const Schema = mongoose_1.default.Schema;
-const postSchema = new Schema({
+exports.postSchema = new Schema({
     username: { type: String, required: true },
     profileImg: { type: String, },
     createdAt: { type: Date, default: Date.now },
@@ -27,5 +27,5 @@ const postSchema = new Schema({
     uuid: { type: String },
     user: User_1.userSchema,
 });
-exports.Post = mongoose_1.default.model('post', postSchema);
+exports.Post = mongoose_1.default.model('post', exports.postSchema);
 //# sourceMappingURL=Post.js.map

@@ -20,11 +20,13 @@ const auth_1 = require("./routes/auth");
 const user_1 = require("./routes/user");
 const post_1 = require("./routes/post");
 const postComment_1 = require("./routes/postComment");
+const notification_1 = require("./routes/notification");
 app.use('/image', express_1.default.static(process.cwd() + '/src/public'));
 app.use('/user', auth_1.authRouter);
 app.use('/user', user_1.userRouter);
 app.use('/post', post_1.postRouter);
 app.use('/postComment', postComment_1.postCommentRouter);
+app.use('/notification', notification_1.notificationRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server http://localhost:${PORT} is running`);

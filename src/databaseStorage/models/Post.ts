@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { userSchema } from './User';
 const Schema: Schema = mongoose.Schema;
 
-const postSchema = new Schema({
+export const postSchema = new Schema({
   username: { type: String, required: true },
   profileImg: { type: String, },
   createdAt: { type: Date, default: Date.now },

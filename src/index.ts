@@ -27,6 +27,7 @@ import { authRouter } from './routes/auth';
 import { userRouter } from './routes/user';
 import { postRouter } from './routes/post';
 import { postCommentRouter } from './routes/postComment';
+import { notificationRouter } from './routes/notification';
 
 app.use('/image', express.static(process.cwd() + '/src/public'));
 
@@ -34,6 +35,7 @@ app.use('/user', authRouter);
 app.use('/user', userRouter);
 app.use('/post', postRouter)
 app.use('/postComment', postCommentRouter);
+app.use('/notification', notificationRouter)
 
 const PORT: string | 5000 = process.env.PORT || 5000;
 
