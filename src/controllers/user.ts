@@ -77,11 +77,6 @@ export class UserController {
   }
 
   public followUser = async (req: Request, res: Response) => {
-
-    // TODO: FIX FOLLOW/UNFOLLOW MESSAGE ON EACH POST. IF THE USER HAS 
-    // 2 OR MORE POSTS AND YOU FOLLOW IT WILL ONLY UPDATE ONE POST, BECAUSE YOU'RE UPDATING ON ID,
-    // YOU HAVE TO UPDATE ALL OF THEM WITH UPDATEMANY
-
     try {
       const { ownerId, visitorId }: { ownerId: string, visitorId: string } = req.query;
 
