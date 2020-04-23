@@ -7,3 +7,4 @@ import { NotificationController } from '../controllers/notification';
 const notificationController = new NotificationController(postDao);
 
 notificationRouter.get('/', notificationController.getNotifications);
+notificationRouter.put('/', notificationController.updateAllNotifications);

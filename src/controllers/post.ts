@@ -38,7 +38,7 @@ export class PostController {
         userId,
         username,
         profileImg,
-        user: processedUser
+        user: processedUser,
       }
 
       const post = await this.postDao.add(newPost);

@@ -26,6 +26,7 @@ exports.postSchema = new Schema({
     userId: { type: String, required: true },
     uuid: { type: String },
     user: User_1.userSchema,
+    isNotification: { type: Boolean },
 });
 exports.Post = mongoose_1.default.model('post', exports.postSchema);
 //# sourceMappingURL=Post.js.map
