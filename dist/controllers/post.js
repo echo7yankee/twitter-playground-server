@@ -79,7 +79,7 @@ class PostController {
         this.getPost = async (req, res) => {
             try {
                 const { postId } = req.params;
-                const post = await this.postDao.findById(postId);
+                const post = await this.postDao.findOne({ uuid: postId });
                 const postComments = await this.postCommentDao.find({ postId: post._id });
                 if (!post) {
                     return res.status(400).json({ error: 'Post does not exist' });
