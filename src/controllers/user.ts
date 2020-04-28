@@ -67,6 +67,7 @@ export class UserController {
         ...req.body
       }
 
+      await this.postDao.updateAll({ userId: newUser.id }, { user: newUser });
       updatedUser = await this.userDao.update(id, newUser);
       return res.status(200).json(updatedUser);
 
