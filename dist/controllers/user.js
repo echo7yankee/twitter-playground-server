@@ -23,7 +23,7 @@ class UserController {
                     bio: user.bio,
                     website: user.website,
                     age: user.age,
-                    social: Object.assign(Object.assign({}, user.social), { followingCount: user.social.following.length, followersCount: user.social.followers.length })
+                    social: user.social,
                 };
                 return res.status(200).json(userDetails);
             }
@@ -67,8 +67,8 @@ class UserController {
                     await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });
                     return res.status(200).json({ message: 'Success' });
                 }
-                newUser = Object.assign(Object.assign({}, user.toJSON()), { social: Object.assign(Object.assign({}, user.social), { following: [...user.social.following, visitorId] }) });
-                newVisitorUser = Object.assign(Object.assign({}, visitorUser.toJSON()), { social: Object.assign(Object.assign({}, visitorUser.social), { followers: [...visitorUser.social.followers, ownerId] }) });
+                newUser = Object.assign(Object.assign({}, user.toJSON()), { social: Object.assign(Object.assign({}, user.social), { followingCount: user.social.following.length + 1, following: [...user.social.following, visitorId] }) });
+                newVisitorUser = Object.assign(Object.assign({}, visitorUser.toJSON()), { social: Object.assign(Object.assign({}, visitorUser.social), { followersCount: visitorUser.social.followers.length + 1, followers: [...visitorUser.social.followers, ownerId] }) });
                 await this.userDao.update(ownerId, newUser);
                 await this.userDao.update(visitorId, newVisitorUser);
                 await this.postDao.updateAll({ userId: visitorId }, { user: newVisitorUser });

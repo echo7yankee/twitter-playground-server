@@ -41,11 +41,7 @@ export class UserController {
         bio: user.bio,
         website: user.website,
         age: user.age,
-        social: {
-          ...user.social,
-          followingCount: user.social.following.length,
-          followersCount: user.social.followers.length,
-        }
+        social: user.social,
       }
 
       return res.status(200).json(userDetails);
@@ -81,6 +77,7 @@ export class UserController {
     try {
       const { ownerId, visitorId }: { ownerId: string, visitorId: string } = req.query;
 
+
       const user = await this.userDao.findById(ownerId);
       const visitorUser = await this.userDao.findById(visitorId);
       let newUser;
@@ -108,6 +105,7 @@ export class UserController {
         ...user.toJSON(),
         social: {
           ...user.social,
+          followingCount: user.social.following.length + 1,
           following: [...user.social.following, visitorId],
         },
       }
@@ -116,6 +114,7 @@ export class UserController {
         ...visitorUser.toJSON(),
         social: {
           ...visitorUser.social,
+          followersCount: visitorUser.social.followers.length + 1,
           followers: [...visitorUser.social.followers, ownerId],
         }
       }
