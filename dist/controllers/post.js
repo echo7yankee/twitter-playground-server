@@ -8,6 +8,8 @@ class PostController {
                 const user = await this.userDao.findById(userId);
                 const processedUser = Object.assign(Object.assign({}, user.toJSON()), { id: user._id });
                 delete processedUser._id;
+                delete processedUser.confirmPassword;
+                delete processedUser.password;
                 if (!userId) {
                     return res.status(400).json({ error: "Something went wrong" });
                 }
@@ -136,7 +138,7 @@ class PostController {
                 let newPost;
                 const { id } = req.params;
                 const { userId } = req.query;
-                const post = await this.postDao.findById(id);
+                const post = await this.postDao.findOne({ uuid: id });
                 const isSameUser = post.whoLiked.some(item => {
                     return item === userId;
                 });
@@ -145,12 +147,12 @@ class PostController {
                             return item !== userId;
                         }) });
                     editedPost = Object.assign(Object.assign({}, newPost), { likes: newPost.whoLiked.length });
-                    likedPost = await this.postDao.update(id, editedPost);
+                    likedPost = await this.postDao.update(post._id, editedPost);
                     return res.status(200).json(likedPost);
                 }
                 newPost = Object.assign(Object.assign({}, post.toJSON()), { whoLiked: [...post.whoLiked, userId] });
                 editedPost = Object.assign(Object.assign({}, newPost), { likes: newPost.whoLiked.length });
-                likedPost = await this.postDao.update(id, editedPost);
+                likedPost = await this.postDao.update(post._id, editedPost);
                 return res.status(200).json(likedPost);
             }
             catch (error) {
