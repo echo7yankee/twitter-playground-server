@@ -24,9 +24,9 @@ export const userSchema = new Schema({
   },
   email: { type: String, required: true },
   password: {
-    type: String, required: true, min: 2
+    type: String, min: 2
   },
-  confirmPassword: { type: String, required: true, min: 2 },
+  confirmPassword: { type: String, min: 2 },
   profileImg: { type: String, },
   // profileImg: { type: String },
   createdAt: { type: Date, default: Date.now }

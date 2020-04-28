@@ -27,6 +27,8 @@ export class PostController {
       }
 
       delete processedUser._id;
+      delete processedUser.confirmPassword;
+      delete processedUser.password;
 
       if (!userId) {
         return res.status(400).json({ error: "Something went wrong" })
@@ -204,7 +206,7 @@ export class PostController {
       const { id }: { id: string } = req.params;
       const { userId }: { userId: string } = req.query;
 
-      const post = await this.postDao.findById(id);
+      const post = await this.postDao.findOne({ uuid: id });
 
       const isSameUser = post.whoLiked.some(item => {
         return item === userId
@@ -223,7 +225,7 @@ export class PostController {
           likes: newPost.whoLiked.length
         }
 
-        likedPost = await this.postDao.update(id, editedPost);
+        likedPost = await this.postDao.update(post._id, editedPost);
         return res.status(200).json(likedPost);
       }
 
@@ -237,7 +239,7 @@ export class PostController {
         likes: newPost.whoLiked.length
       }
 
-      likedPost = await this.postDao.update(id, editedPost);
+      likedPost = await this.postDao.update(post._id, editedPost);
       return res.status(200).json(likedPost);
 
     } catch (error) {
