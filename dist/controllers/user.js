@@ -32,6 +32,26 @@ class UserController {
                 res.status(500).json({ error: 'Something went wrong' });
             }
         };
+        this.getUsers = async (req, res) => {
+            try {
+                const params = req.query;
+                const users = await this.userDao.find(params);
+                if (!users) {
+                    return res.status(400).json({});
+                }
+                const processedUsers = users.map((user) => {
+                    return Object.assign(Object.assign({}, user.toJSON()), { id: user._id });
+                });
+                delete processedUsers._id;
+                delete processedUsers.password;
+                delete processedUsers.confirmPassword;
+                return res.status(200).json(processedUsers);
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Something went wrong' });
+            }
+        };
         this.editUserDetails = async (req, res) => {
             try {
                 const { id } = req.params;
