@@ -40,6 +40,9 @@ class UserController {
                     _id: query._id,
                     username: { $regex: query.username, $options: 'i' }
                 };
+                if (!query.username) {
+                    return res.send([]);
+                }
                 const users = await this.userDao.find(params);
                 if (!users) {
                     return res.status(400).json({});
@@ -51,6 +54,9 @@ class UserController {
                     delete newUsers.confirmPassword;
                     return newUsers;
                 });
+                if (!processedUsers.length) {
+                    return res.status(400).json({ error: 'Sorry! User has not been found' });
+                }
                 return res.status(200).json(processedUsers);
             }
             catch (error) {
