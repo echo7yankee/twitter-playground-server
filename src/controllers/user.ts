@@ -53,7 +53,7 @@ export class UserController {
     }
   }
 
-  public getUsers = async (req: Request, res: Response) => {
+  public getUsersInSearch = async (req: Request, res: Response) => {
     try {
       const query = req.query;
       const params = {

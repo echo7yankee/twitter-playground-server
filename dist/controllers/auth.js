@@ -23,6 +23,7 @@ class AuthController {
                         followingCount: 0,
                         followers: [],
                         followersCount: 0,
+                        usersToMessage: [],
                     }, age: {
                         day: 'Select day',
                         month: 'Select month',

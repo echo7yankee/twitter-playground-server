@@ -9,7 +9,7 @@ export const userRouter = express.Router();
 import { UserController } from '../controllers/user';
 const userController = new UserController(userDao, postDao, postCommentDao);
 
-userRouter.get('/', userController.getUsers);
+userRouter.get('/search', userController.getUsersInSearch);
 userRouter.get('/userDetails/:id', userController.getUserDetails);
 userRouter.put('/userDetails/:id', userController.editUserDetails);
 userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);

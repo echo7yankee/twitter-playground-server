@@ -10,7 +10,7 @@ const daos_3 = require("../databaseStorage/daos");
 exports.userRouter = express_1.default.Router();
 const user_1 = require("../controllers/user");
 const userController = new user_1.UserController(daos_1.userDao, daos_2.postDao, daos_3.postCommentDao);
-exports.userRouter.get('/', userController.getUsers);
+exports.userRouter.get('/search', userController.getUsersInSearch);
 exports.userRouter.get('/userDetails/:id', userController.getUserDetails);
 exports.userRouter.put('/userDetails/:id', userController.editUserDetails);
 exports.userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);

@@ -17,6 +17,7 @@ exports.userSchema = new Schema({
         followingCount: { type: Number },
         followers: { type: Array },
         followersCount: { type: Number },
+        usersToMessage: { type: Array },
     },
     age: {
         day: { type: String },

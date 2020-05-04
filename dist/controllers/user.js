@@ -33,7 +33,7 @@ class UserController {
                 res.status(500).json({ error: 'Something went wrong' });
             }
         };
-        this.getUsers = async (req, res) => {
+        this.getUsersInSearch = async (req, res) => {
             try {
                 const query = req.query;
                 const params = {
