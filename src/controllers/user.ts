@@ -62,14 +62,15 @@ export class UserController {
       }
 
       const processedUsers = users.map((user) => {
-        return {
+        const newUsers = {
           ...user.toJSON(),
           id: user._id,
         }
+        delete newUsers._id;
+        delete newUsers.password;
+        delete newUsers.confirmPassword;
+        return newUsers;
       })
-      delete processedUsers._id;
-      delete processedUsers.password;
-      delete processedUsers.confirmPassword;
 
       return res.status(200).json(processedUsers);
 
