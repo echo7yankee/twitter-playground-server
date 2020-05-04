@@ -8,6 +8,7 @@ const Schema = mongoose_1.default.Schema;
 exports.userSchema = new Schema({
     fName: { type: String, required: true, min: 2 },
     lName: { type: String, required: true, min: 2 },
+    username: { type: String, required: true },
     location: { type: String, },
     website: { type: String, },
     bio: { type: String, },

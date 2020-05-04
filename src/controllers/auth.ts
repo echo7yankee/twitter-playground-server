@@ -34,6 +34,7 @@ export class AuthController {
       //register user
       const newUser = {
         ...req.body,
+        username: `${req.body.fName} ${req.body.lName}`,
         location: '',
         website: '',
         bio: '',

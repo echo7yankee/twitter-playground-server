@@ -35,6 +35,7 @@ export class UserController {
         id: user._id,
         fName: user.fName,
         lName: user.lName,
+        username: `${user.fName} ${user.lName}`,
         createdAt: user.createdAt,
         profileImg: user.profileImg,
         location: user.location,
@@ -54,7 +55,11 @@ export class UserController {
 
   public getUsers = async (req: Request, res: Response) => {
     try {
-      const params = req.query;
+      const query = req.query;
+      const params = {
+        _id: query._id,
+        username: { $regex: query.username, $options: 'i' }
+      }
       const users = await this.userDao.find(params);
 
       if (!users) {
