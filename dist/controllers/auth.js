@@ -24,6 +24,7 @@ class AuthController {
                         followers: [],
                         followersCount: 0,
                         usersToMessage: [],
+                        roomIds: [],
                     }, age: {
                         day: 'Select day',
                         month: 'Select month',

@@ -14,6 +14,7 @@ export const userSchema = new Schema({
     followers: { type: Array },
     followersCount: { type: Number },
     usersToMessage: { type: Array },
+    roomIds: { type: String },
   },
   age: {
     day: { type: String },

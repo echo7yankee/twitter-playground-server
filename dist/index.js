@@ -7,8 +7,21 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = __importDefault(require("socket.io"));
 const fileUpload = require('express-fileupload');
 const app = express_1.default();
+const server = http_1.default.createServer(app);
+const io = socket_io_1.default(server);
+io.on('connection', (socket) => {
+    socket.on('join', ({ name, room }, _callback) => {
+        console.log('User has joined');
+        console.log({ name, room });
+    });
+    socket.on('disconnect', () => {
+        console.log('Disconnecting');
+    });
+});
 app.use(cors_1.default());
 app.use(fileUpload());
 app.use(express_1.default.json());
@@ -28,7 +41,7 @@ app.use('/post', post_1.postRouter);
 app.use('/postComment', postComment_1.postCommentRouter);
 app.use('/notification', notification_1.notificationRouter);
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server http://localhost:${PORT} is running`);
 });
 //# sourceMappingURL=index.js.map
