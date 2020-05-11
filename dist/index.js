@@ -16,6 +16,7 @@ const io = socket_io_1.default(server);
 io.on('connection', (socket) => {
     socket.on('join', ({ name, room }, callback) => {
         console.log('User has joined');
+        console.log(room);
         socket.emit('message', { user: name, text: `${name}, welcome!` });
         socket.broadcast.to(room).emit('message', { user: 'admin', text: `${name} is online` });
         socket.join(room);
@@ -41,12 +42,14 @@ const user_1 = require("./routes/user");
 const post_1 = require("./routes/post");
 const postComment_1 = require("./routes/postComment");
 const notification_1 = require("./routes/notification");
+const messages_1 = require("./routes/messages");
 app.use('/image', express_1.default.static(process.cwd() + '/src/public'));
 app.use('/user', auth_1.authRouter);
 app.use('/user', user_1.userRouter);
 app.use('/post', post_1.postRouter);
 app.use('/postComment', postComment_1.postCommentRouter);
 app.use('/notification', notification_1.notificationRouter);
+app.use('/messages', messages_1.messagesRouter);
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server http://localhost:${PORT} is running`);

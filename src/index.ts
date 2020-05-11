@@ -15,6 +15,7 @@ const io = socketio(server);
 io.on('connection', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     console.log('User has joined');
+    console.log(room);
     socket.emit('message', { user: name, text: `${name}, welcome!` })
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${name} is online` })
 
@@ -52,6 +53,7 @@ import { userRouter } from './routes/user';
 import { postRouter } from './routes/post';
 import { postCommentRouter } from './routes/postComment';
 import { notificationRouter } from './routes/notification';
+import { messagesRouter } from './routes/messages';
 
 app.use('/image', express.static(process.cwd() + '/src/public'));
 
@@ -60,6 +62,7 @@ app.use('/user', userRouter);
 app.use('/post', postRouter)
 app.use('/postComment', postCommentRouter);
 app.use('/notification', notificationRouter)
+app.use('/messages', messagesRouter);
 
 const PORT: string | 5000 = process.env.PORT || 5000;
 
