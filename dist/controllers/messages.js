@@ -29,8 +29,8 @@ class MessagesController {
             try {
                 const { roomId } = req.params;
                 const messages = await this.messagesDao.findOne({ roomId });
-                if (!messages) {
-                    return res.status(400).json({});
+                if (messages === null) {
+                    return res.status(200).json({ roomId: '', messages: [] });
                 }
                 return res.status(200).json(messages);
             }
