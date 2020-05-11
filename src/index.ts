@@ -15,10 +15,8 @@ const io = socketio(server);
 io.on('connection', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     console.log('User has joined');
-    console.log(room);
-    socket.emit('message', { user: name, text: `${name}, welcome!` })
-    socket.broadcast.to(room).emit('message', { user: 'admin', text: `${name} is online` })
-
+    console.log(name);
+    // socket.emit('message', { user: name, text: `${name}, welcome!` })
     socket.join(room);
 
     callback();
