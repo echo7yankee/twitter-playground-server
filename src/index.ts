@@ -16,7 +16,6 @@ io.on('connection', (socket) => {
   socket.on('join', ({ name, id }, callback) => {
     console.log('User has joined');
     console.log(name);
-    // socket.emit('message', { user: name, text: `${name}, welcome!` })
     socket.join(id);
 
     callback();

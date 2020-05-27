@@ -15,4 +15,5 @@ exports.userRouter.get('/userDetails/:id', userController.getUserDetails);
 exports.userRouter.put('/userDetails/:id', userController.editUserDetails);
 exports.userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);
 exports.userRouter.post('/userDetails/follow', userController.followUser);
+exports.userRouter.put('/userDetails/accept/:id', userController.turnUserAcceptanceOnTrue);
 //# sourceMappingURL=user.js.map

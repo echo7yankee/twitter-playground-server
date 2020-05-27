@@ -79,6 +79,39 @@ class UserController {
                 res.status(500).json({ error: 'Something went wrong' });
             }
         };
+        this.turnUserAcceptanceOnTrue = async (req, res) => {
+            try {
+                const { id } = req.params;
+                const { room, updatedUserAdmin } = req.body;
+                let user = await this.userDao.findById(id);
+                if (!user) {
+                    return res.status(400).json({ message: 'User not found' });
+                }
+                user = Object.assign(Object.assign({}, user.toJSON()), { social: Object.assign(Object.assign({}, user.social), { usersToMessage: user.social.usersToMessage.map((userVisitor) => {
+                            if (userVisitor.id === updatedUserAdmin.id) {
+                                return Object.assign(Object.assign({}, userVisitor), { social: Object.assign(Object.assign({}, userVisitor.social), { roomIds: userVisitor.social.roomIds.map((roomId) => {
+                                            if (roomId.id === room.id) {
+                                                return Object.assign(Object.assign({}, roomId), { hasAccepted: true });
+                                            }
+                                            return roomId;
+                                        }) }) });
+                            }
+                            return userVisitor;
+                        }), roomIds: user.social.roomIds.map((roomId) => {
+                            if (roomId.id === room.id) {
+                                console.log(roomId.id);
+                                return Object.assign(Object.assign({}, roomId), { hasAccepted: true });
+                            }
+                            return roomId;
+                        }) }) });
+                await this.userDao.update(id, user);
+                return res.status(200).json({ message: 'Success' });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Something went wrong' });
+            }
+        };
         this.followUser = async (req, res) => {
             try {
                 const { ownerId, visitorId } = req.query;
