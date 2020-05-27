@@ -113,6 +113,56 @@ export class UserController {
     }
   }
 
+  public turnUserAcceptanceOnTrue = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { room, updatedUserAdmin } = req.body;
+      let user = await this.userDao.findById(id);
+      if (!user) { return res.status(400).json({ message: 'User not found' }); }
+      user = {
+        ...user.toJSON(),
+        social: {
+          ...user.social,
+          usersToMessage: user.social.usersToMessage.map((userVisitor) => {
+            if (userVisitor.id === updatedUserAdmin.id) {
+              return {
+                ...userVisitor,
+                social: {
+                  ...userVisitor.social,
+                  roomIds: userVisitor.social.roomIds.map((roomId) => {
+                    if (roomId.id === room.id) {
+                      return {
+                        ...roomId,
+                        hasAccepted: true,
+                      }
+                    }
+                    return roomId;
+                  })
+                }
+              }
+            }
+            return userVisitor;
+          }),
+          roomIds: user.social.roomIds.map((roomId) => {
+            if (roomId.id === room.id) {
+              console.log(roomId.id);
+              return {
+                ...roomId,
+                hasAccepted: true,
+              }
+            }
+            return roomId;
+          })
+        }
+      };
+      await this.userDao.update(id, user);
+      return res.status(200).json({ message: 'Success' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+
   public followUser = async (req: Request, res: Response) => {
     try {
       const { ownerId, visitorId }: { ownerId: string, visitorId: string } = req.query;

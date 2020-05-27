@@ -14,3 +14,4 @@ userRouter.get('/userDetails/:id', userController.getUserDetails);
 userRouter.put('/userDetails/:id', userController.editUserDetails);
 userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);
 userRouter.post('/userDetails/follow', userController.followUser);
+userRouter.put('/userDetails/accept/:id', userController.turnUserAcceptanceOnTrue)
