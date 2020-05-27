@@ -13,17 +13,17 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 io.on('connection', (socket) => {
-  socket.on('join', ({ name, room }, callback) => {
+  socket.on('join', ({ name, id }, callback) => {
     console.log('User has joined');
     console.log(name);
     // socket.emit('message', { user: name, text: `${name}, welcome!` })
-    socket.join(room);
+    socket.join(id);
 
     callback();
   })
 
-  socket.on('sendMessage', (message, name, room, callback) => {
-    io.to(room).emit('message', { user: name, text: message });
+  socket.on('sendMessage', (message, name, id, callback) => {
+    io.to(id).emit('message', { user: name, text: message });
     callback();
   })
 

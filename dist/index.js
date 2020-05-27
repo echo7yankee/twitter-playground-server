@@ -14,14 +14,14 @@ const app = express_1.default();
 const server = http_1.default.createServer(app);
 const io = socket_io_1.default(server);
 io.on('connection', (socket) => {
-    socket.on('join', ({ name, room }, callback) => {
+    socket.on('join', ({ name, id }, callback) => {
         console.log('User has joined');
         console.log(name);
-        socket.join(room);
+        socket.join(id);
         callback();
     });
-    socket.on('sendMessage', (message, name, room, callback) => {
-        io.to(room).emit('message', { user: name, text: message });
+    socket.on('sendMessage', (message, name, id, callback) => {
+        io.to(id).emit('message', { user: name, text: message });
         callback();
     });
     socket.on('disconnect', () => {
