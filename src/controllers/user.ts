@@ -145,7 +145,6 @@ export class UserController {
           }),
           roomIds: user.social.roomIds.map((roomId) => {
             if (roomId.id === room.id) {
-              console.log(roomId.id);
               return {
                 ...roomId,
                 hasAccepted: true,
@@ -157,6 +156,28 @@ export class UserController {
       };
       await this.userDao.update(id, user);
       return res.status(200).json({ message: 'Success' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Something went wrong' });
+    }
+  }
+
+  public cancelUserAcceptance = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { userVisitorId, roomId } = req.query;
+      let user = await this.userDao.findById(id);
+      user = {
+        ...user.toJSON(),
+        social: {
+          ...user.social,
+          usersToMessage: user.social.usersToMessage.filter((user) => user.id !== userVisitorId),
+          roomIds: user.social.roomIds.filter((room) => room.id !== roomId),
+        }
+      }
+      if (!user) { return res.status(400).json({ error: 'User not found' }) }
+      await this.userDao.update(id, user);
+      return res.status({ message: 'Success' });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'Something went wrong' });

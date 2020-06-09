@@ -16,4 +16,5 @@ exports.userRouter.put('/userDetails/:id', userController.editUserDetails);
 exports.userRouter.put('/userDetails/:id/upload', userController.uploadUserImage);
 exports.userRouter.post('/userDetails/follow', userController.followUser);
 exports.userRouter.put('/userDetails/accept/:id', userController.turnUserAcceptanceOnTrue);
+exports.userRouter.put('/userDetails/cancel/:id', userController.cancelUserAcceptance);
 //# sourceMappingURL=user.js.map
