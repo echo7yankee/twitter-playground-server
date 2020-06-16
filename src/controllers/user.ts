@@ -53,16 +53,14 @@ export class UserController {
     }
   }
 
-  public getUsersInSearch = async (req: Request, res: Response) => {
+  public getUsers = async (req: Request, res: Response) => {
     try {
-      const query = req.query;
-      const params = {
-        _id: query._id,
-        username: { $regex: query.username, $options: 'i' }
+      const params = req.query;
+      if (params.username) {
+        params.username = new RegExp(params.username);
+        params.username = { $regex: params.username, $options: 'i' };
       }
-      if (!query.username) {
-        return res.send([]);
-      }
+
       const users = await this.userDao.find(params);
 
       if (!users) {
@@ -119,6 +117,7 @@ export class UserController {
       const { room, updatedUserAdmin } = req.body;
       let user = await this.userDao.findById(id);
       if (!user) { return res.status(400).json({ message: 'User not found' }); }
+
       user = {
         ...user.toJSON(),
         social: {
@@ -129,7 +128,7 @@ export class UserController {
                 ...userVisitor,
                 social: {
                   ...userVisitor.social,
-                  roomIds: userVisitor.social.roomIds.map((roomId) => {
+                  roomIds: updatedUserAdmin.social.roomIds.map((roomId) => {
                     if (roomId.id === room.id) {
                       return {
                         ...roomId,

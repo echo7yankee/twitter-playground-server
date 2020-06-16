@@ -33,15 +33,12 @@ class UserController {
                 res.status(500).json({ error: 'Something went wrong' });
             }
         };
-        this.getUsersInSearch = async (req, res) => {
+        this.getUsers = async (req, res) => {
             try {
-                const query = req.query;
-                const params = {
-                    _id: query._id,
-                    username: { $regex: query.username, $options: 'i' }
-                };
-                if (!query.username) {
-                    return res.send([]);
+                const params = req.query;
+                if (params.username) {
+                    params.username = new RegExp(params.username);
+                    params.username = { $regex: params.username, $options: 'i' };
                 }
                 const users = await this.userDao.find(params);
                 if (!users) {
@@ -89,7 +86,7 @@ class UserController {
                 }
                 user = Object.assign(Object.assign({}, user.toJSON()), { social: Object.assign(Object.assign({}, user.social), { usersToMessage: user.social.usersToMessage.map((userVisitor) => {
                             if (userVisitor.id === updatedUserAdmin.id) {
-                                return Object.assign(Object.assign({}, userVisitor), { social: Object.assign(Object.assign({}, userVisitor.social), { roomIds: userVisitor.social.roomIds.map((roomId) => {
+                                return Object.assign(Object.assign({}, userVisitor), { social: Object.assign(Object.assign({}, userVisitor.social), { roomIds: updatedUserAdmin.social.roomIds.map((roomId) => {
                                             if (roomId.id === room.id) {
                                                 return Object.assign(Object.assign({}, roomId), { hasAccepted: true });
                                             }
