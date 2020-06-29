@@ -6,16 +6,13 @@ class PostController {
             try {
                 const { userId, username, profileImg } = req.query;
                 const user = await this.userDao.findById(userId);
-                const processedUser = Object.assign(Object.assign({}, user.toJSON()), { id: user._id });
-                delete processedUser._id;
-                delete processedUser.confirmPassword;
-                delete processedUser.password;
                 if (!userId) {
-                    return res.status(400).json({ error: "Something went wrong" });
+                    return res.status(400).json({ error: 'Something went wrong' });
                 }
                 const newPost = Object.assign(Object.assign({}, req.body), { likes: 0, userId,
                     username,
-                    profileImg, user: processedUser });
+                    profileImg,
+                    user });
                 const post = await this.postDao.add(newPost);
                 return res.status(200).json(post);
             }
@@ -32,7 +29,13 @@ class PostController {
                     return res.status(400).json({ error: 'Posts not found' });
                 }
                 const processedPosts = posts.map(post => {
-                    const newPost = Object.assign(Object.assign({}, post.toJSON()), { id: post._id });
+                    const newPost = Object.assign(Object.assign({}, post.toJSON()), { user: post.user.map((user) => {
+                            const newUser = Object.assign(Object.assign({}, user), { id: user._id });
+                            delete newUser._id;
+                            delete newUser.password,
+                                delete newUser.confirmPassword;
+                            return newUser;
+                        }), id: post._id });
                     delete newPost._id;
                     return newPost;
                 });
@@ -62,7 +65,11 @@ class PostController {
                     return Number(new Date(b.createdAt)) - Number(new Date(a.createdAt));
                 });
                 const processedPosts = posts.map((post) => {
-                    const newPost = Object.assign(Object.assign({}, post.toJSON()), { id: post._id, postComments: processedPostComments.filter((postComment) => {
+                    const newUser = Object.assign(Object.assign({}, post.user.toJSON()), { id: post.user._id });
+                    delete newUser._id;
+                    delete newUser.password,
+                        delete newUser.confirmPassword;
+                    const newPost = Object.assign(Object.assign({}, post.toJSON()), { user: newUser, id: post._id, postComments: processedPostComments.filter((postComment) => {
                             return post._id.equals(postComment.postId);
                         }) });
                     delete newPost._id;

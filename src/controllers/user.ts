@@ -35,6 +35,7 @@ export class UserController {
         id: user._id,
         fName: user.fName,
         lName: user.lName,
+        email: user.email,
         username: `${user.fName} ${user.lName}`,
         createdAt: user.createdAt,
         profileImg: user.profileImg,

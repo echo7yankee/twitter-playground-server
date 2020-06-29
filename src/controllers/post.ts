@@ -4,6 +4,9 @@ import { Request, Response } from 'express';
 import { PostCommentDao } from "../databaseStorage/PostCommentsDao";
 import { UserDao } from "../databaseStorage/UserDao";
 
+//TODO: GetAllPosts and GetPosts should be only one function with different params. Work on this
+//TODO: Fix email removal when accepting to message user. The bug happens when adding a user to Message
+
 export class PostController {
   private postDao: PostDao
   private postCommentDao: PostCommentDao
@@ -21,17 +24,9 @@ export class PostController {
         : { userId: string, username: string, profileImg: string } = req.query;
 
       const user = await this.userDao.findById(userId);
-      const processedUser = {
-        ...user.toJSON(),
-        id: user._id,
-      }
-
-      delete processedUser._id;
-      delete processedUser.confirmPassword;
-      delete processedUser.password;
 
       if (!userId) {
-        return res.status(400).json({ error: "Something went wrong" })
+        return res.status(400).json({ error: 'Something went wrong' })
       }
 
       const newPost = {
@@ -40,7 +35,7 @@ export class PostController {
         userId,
         username,
         profileImg,
-        user: processedUser,
+        user,
       }
 
       const post = await this.postDao.add(newPost);
@@ -63,7 +58,19 @@ export class PostController {
       const processedPosts = posts.map(post => {
         const newPost = {
           ...post.toJSON(),
-          id: post._id
+          user: post.user.map((user) => {
+            const newUser = {
+              ...user,
+              id: user._id,
+            }
+
+            delete newUser._id;
+            delete newUser.password,
+              delete newUser.confirmPassword;
+
+            return newUser;
+          }),
+          id: post._id,
         }
         delete newPost._id;
         return newPost;
@@ -102,10 +109,18 @@ export class PostController {
         return Number(new Date(b.createdAt)) - Number(new Date(a.createdAt));
       })
 
-
       const processedPosts = posts.map((post) => {
+        const newUser = {
+          ...post.user.toJSON(),
+          id: post.user._id,
+        }
+        delete newUser._id;
+        delete newUser.password,
+          delete newUser.confirmPassword;
+
         const newPost = {
           ...post.toJSON(),
+          user: newUser,
           id: post._id,
           postComments: processedPostComments.filter((postComment) => {
             return post._id.equals(postComment.postId);
