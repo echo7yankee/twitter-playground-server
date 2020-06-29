@@ -31,7 +31,6 @@ export const userSchema = new Schema({
   },
   confirmPassword: { type: String, min: 2 },
   profileImg: { type: String, },
-  // profileImg: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 
