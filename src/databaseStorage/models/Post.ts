@@ -20,7 +20,6 @@ export const postSchema = new Schema({
   },
   likes: { type: Number },
   userId: { type: String, required: true },
-  uuid: { type: String },
   user: userSchema,
   isNotification: { type: Boolean },
 });

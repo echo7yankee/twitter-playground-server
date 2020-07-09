@@ -39,8 +39,13 @@ export class PostController {
       }
 
       const post = await this.postDao.add(newPost);
+      const processedPost = {
+        ...post.toJSON(),
+        id: post._id,
+      }
+      delete processedPost._id;
 
-      return res.status(200).json(post);
+      return res.status(200).json(processedPost);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'Something went wrong' });
@@ -144,7 +149,7 @@ export class PostController {
   public getPost = async (req: Request, res: Response) => {
     try {
       const { postId } = req.params;
-      const post = await this.postDao.findOne({ uuid: postId });
+      const post = await this.postDao.findById(postId);
       const postComments = await this.postCommentDao.find({ postId: post._id })
       if (!post) {
         return res.status(400).json({ error: 'Post does not exist' })
@@ -176,8 +181,7 @@ export class PostController {
   public removePost = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const post = await this.postDao.findOne({ uuid: id })
-      const removedPost = await this.postDao.remove(post._id);
+      const removedPost = await this.postDao.remove(id);
 
       if (!removedPost) {
         return res.status(400).json({});
@@ -197,8 +201,7 @@ export class PostController {
       const updatedPost = {
         ...req.body
       }
-      const post = await this.postDao.findOne({ uuid: id })
-      const editedPost = await this.postDao.update(post._id, updatedPost);
+      const editedPost = await this.postDao.update(id, updatedPost);
 
       if (!editedPost) {
         return res.status(400).json({});
@@ -221,7 +224,7 @@ export class PostController {
       const { id }: { id: string } = req.params;
       const { userId }: { userId: string } = req.query;
 
-      const post = await this.postDao.findOne({ uuid: id });
+      const post = await this.postDao.findById(id);
 
       const isSameUser = post.whoLiked.some(item => {
         return item === userId
@@ -266,7 +269,7 @@ export class PostController {
   public votePoll = async (req: Request, res: Response) => {
     try {
       const { id }: { id: string } = req.params;
-      const post = await this.postDao.findOne({ uuid: id });
+      const post = await this.postDao.findById(id);
 
       let editedPost;
       let newPost;

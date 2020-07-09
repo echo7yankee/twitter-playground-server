@@ -56,7 +56,12 @@ export class PostCommentController {
       }
 
       const postComment = await this.postCommentDao.add(newPostComment);
-      return res.status(200).json(postComment);
+      const processedPostComment = {
+        ...postComment.toJSON(),
+        id: postComment._id,
+      }
+      delete processedPostComment._id
+      return res.status(200).json(processedPostComment);
 
     } catch (error) {
       console.log(error);
@@ -67,7 +72,7 @@ export class PostCommentController {
   public removePostComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const post = await this.postCommentDao.findOne({ uuid: id });
+      const post = await this.postCommentDao.findById(id);
       const removedPostComment = await this.postCommentDao.remove(post._id);
 
       if (!removedPostComment) {
@@ -84,7 +89,7 @@ export class PostCommentController {
   public editPostComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const comment = await this.postCommentDao.findOne({ uuid: id })
+      const comment = await this.postCommentDao.findById(id)
 
       if (!comment) {
         return res.status(400).json({});
